@@ -2,7 +2,7 @@ echo -e "\e[36m disable default vertion of nodjs \e[0m"
 
 dnf module disable nodejs -y
 dnf module enable nodejs:18 -y
-cp  /etc/systemd/system/backend.service /etc/systemd/system/backend.service
+cp backend.service /etc/systemd/system/backend.service
 echo -e "\e[36m install nodjs  \e[0m"
 dnf install nodejs -y
 
