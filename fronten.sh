@@ -1,5 +1,5 @@
 logs_file=/expence.log
-colour="\e[36m "
+colour="\e[33m "
 colour1="\e[0m"
 
 echo -e "${colour} insatll nginx ${colour1}"
