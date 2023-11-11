@@ -1,17 +1,21 @@
-echo -e "\e[36m insatll nginx \e[0m"
-dnf install nginx -y  &>>/expence.log
-echo -e "\e[36m copy expence.conf file \e[0m"
-cp expence.conf /etc/nginx/default.d/expense.conf &>>/expence.log
-echo -e "\e[36m remove nginx old content \e[0m"
-rm -rf /usr/share/nginx/html/* &>>/expence.log
-echo -e "\e[36m download frontend application \e[0m"
-curl -o /tmp/frontend.zip https://expense-artifacts.s3.amazonaws.com/frontend.zip  &>>/expence.log
-echo -e "\e[36m unzip nginx \e[0m"
-cd /usr/share/nginx/html  &>>/expence.log
-unzip /tmp/frontend.zip  &>>/expence.log
-echo -e "\e[36m start the nginx \e[0m"
-systemctl enable nginx  &>>/expence.log
-systemctl start nginx  &>>/expence.log
+logs_file=/expence.log
+colour="\e[36m "
+colour1="\e[0m"
+
+echo -e "${colour} insatll nginx ${colour1}"
+dnf install nginx -y  &>>logs_file
+echo -e "${colour} copy expence.conf file ${colour1}"
+cp expence.conf /etc/nginx/default.d/expense.conf &>>logs_file
+echo -e "${colour}remove nginx old content ${colour1}"
+rm -rf /usr/share/nginx/html/* &>>logs_file
+echo -e "${colour} download frontend application ${colour1}"
+curl -o /tmp/frontend.zip https://expense-artifacts.s3.amazonaws.com/frontend.zip  &>>logs_file
+echo -e "${colour} unzip nginx ${colour1}"
+cd /usr/share/nginx/html  &>>logs_file
+unzip /tmp/frontend.zip  &>>logs_file
+echo -e "${colour} start the nginx ${colour1}"
+systemctl enable nginx  &>>logs_file
+systemctl start nginx  &>>logs_file
 
 # hi
 
