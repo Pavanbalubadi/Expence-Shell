@@ -15,7 +15,9 @@ if [ $? -ne 0 ]; then
   useradd expense  &>>/expence.log
 fi
 echo -e "\e[36m add app directory  \e[0m"
+if [ !-d /app ]; then
 mkdir /app &>>/temp/expence.log
+fi
 echo $?
 curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip  &>>/expence.loge.log
 echo $?
