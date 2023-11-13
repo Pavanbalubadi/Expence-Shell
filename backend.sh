@@ -1,5 +1,8 @@
 echo -e "\e[36m disable default vertion of nodjs \e[0m"
-
+Mysql_root_password=$1
+if [ -z $1 ]; then
+  exit
+fi
 dnf module disable nodejs -y  &>>/expence.log
 echo $?
 dnf module enable nodejs:18 -y &>>/expence.log
@@ -15,7 +18,7 @@ if [ $? -ne 0 ]; then
   useradd expense  &>>/expence.log
 fi
 echo -e "\e[36m add app directory  \e[0m"
-if [ !-d /app ]; then
+if [ ! -d /app ]; then
 mkdir /app &>>/temp/expence.log
 fi
 echo $?
@@ -30,7 +33,7 @@ npm install
 echo $?
 dnf install mysql -y  &>>/expence.log
 echo $?
-mysql -h mysql-dev.pavanbalubadi3017.online -uroot -pExpenseApp@1 < /app/schema/backend.sql
+mysql -h mysql-dev.pavanbalubadi3017.online -uroot -p{Mysql_root_password}< /app/schema/backend.sql
 systemctl daemon-reload  &>>/expence.log
 systemctl enable backend  &>>/expence.log
 systemctl start backend  &>>/expence.log
