@@ -10,8 +10,10 @@ echo $?
 cp backend.service /etc/systemd/system/backend.service &>>/expence.log
 echo $?
 echo -e "\e[36m adding the user \e[0m"
-useradd expense  &>>/expence.log
-echo $?
+id expence
+if [ $? -ne 0 ]; then
+  useradd expense  &>>/expence.log
+fi
 echo -e "\e[36m add app directory  \e[0m"
 mkdir /app &>>/temp/expence.log
 echo $?
