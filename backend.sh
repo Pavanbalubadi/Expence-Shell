@@ -1,3 +1,12 @@
+log_file= /temp/expence.log
+status_check() {
+  if [ $? -eq 0 ];then
+    echo -e "\e[32m sucesses \e[0m"
+  else
+    echo -e "\e[33m failure \e[0m"
+  fi
+}
+
 if [ -z "$1" ]; then
   echo Password Input Missing
   exit
