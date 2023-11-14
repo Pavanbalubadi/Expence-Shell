@@ -1,6 +1,6 @@
 echo -e "\e[36m disable default vertion of nodjs \e[0m"
 Mysql_root_password=$1
-if [ -z $1 ]; then
+if [ -z "$1" ]; then
   exit
 fi
 dnf module disable nodejs -y  &>>/expence.log
@@ -22,6 +22,7 @@ if [ ! -d /app ]; then
 mkdir /app &>>/temp/expence.log
 fi
 echo $?
+rm -rf /app/* &>>/temp/expence.log
 curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip  &>>/expence.loge.log
 echo $?
 cd /app
@@ -33,7 +34,7 @@ npm install
 echo $?
 dnf install mysql -y  &>>/expence.log
 echo $?
-mysql -h mysql-dev.pavanbalubadi3017.online -uroot -p{Mysql_root_password}< /app/schema/backend.sql
+mysql -h mysql-dev.pavanbalubadi3017.online -uroot -p${Mysql_root_password}< /app/schema/backend.sql
 systemctl daemon-reload  &>>/expence.log
 systemctl enable backend  &>>/expence.log
 systemctl start backend  &>>/expence.log
