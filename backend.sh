@@ -1,40 +1,66 @@
-echo -e "\e[36m disable default vertion of nodjs \e[0m"
-Mysql_root_password=$1
 if [ -z "$1" ]; then
+  echo Password Input Missing
   exit
 fi
-dnf module disable nodejs -y  &>>/expence.log
-echo $?
-dnf module enable nodejs:18 -y &>>/expence.log
-echo $?
-echo -e "\e[36m install nodjs  \e[0m"
-dnf install nodejs -y  &>>/expence.log
-echo $?
-cp backend.service /etc/systemd/system/backend.service &>>/expence.log
-echo $?
-echo -e "\e[36m adding the user \e[0m"
-id expence
+
+MYSQL_ROOT_PASSWORD=$1
+
+echo -e "${color} Disable NodeJS default Version \e[0m"
+dnf module disable nodejs -y &>>$log_file
+status_check
+
+echo -e "${color} Enable NodeJS 18 Version \e[0m"
+dnf module enable nodejs:18 -y &>>$log_file
+status_check
+
+echo -e "${color} Install NodeJS \e[0m"
+dnf install nodejs -y &>>$log_file
+status_check
+
+echo -e "${color} Copy Backend Service File \e[0m"
+cp backend.service /etc/systemd/system/backend.service &>>$log_file
+status_check
+
+id expense &>>$log_file
 if [ $? -ne 0 ]; then
-  useradd expense  &>>/expence.log
+  echo -e "${color} Add Application User \e[0m"
+  useradd expense &>>$log_file
+  status_check
 fi
-echo -e "\e[36m add app directory  \e[0m"
+
 if [ ! -d /app ]; then
-mkdir /app &>>/temp/expence.log
+  echo -e "${color} Create Application Directory \e[0m"
+  mkdir /app &>>$log_file
+  status_check
 fi
-echo $?
-rm -rf /app/* &>>/temp/expence.log
-curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip  &>>/expence.loge.log
-echo $?
-cd /app
-echo $?
-unzip /tmp/backend.zip
-echo $?
-cd /app
-npm install
-echo $?
-dnf install mysql -y  &>>/expence.log
-echo $?
-mysql -h mysql-dev.pavanbalubadi3017.online -uroot -p${Mysql_root_password}< /app/schema/backend.sql
-systemctl daemon-reload  &>>/expence.log
-systemctl enable backend  &>>/expence.log
-systemctl start backend  &>>/expence.log
+
+echo -e "${color} Delete old Application Content \e[0m"
+rm -rf /app/* &>>$log_file
+status_check
+
+echo -e "${color} Download Application Content \e[0m"
+curl -o /tmp/backend.zip https://expense-artifacts.s3.amazonaws.com/backend.zip &>>$log_file
+status_check
+
+echo -e "${color} Extract Application Content \e[0m"
+cd /app &>>$log_file
+unzip /tmp/backend.zip &>>$log_file
+status_check
+
+echo -e "${color} Download NodeJS Dependencies \e[0m"
+npm install &>>$log_file
+status_check
+
+echo -e "${color} Install MySQL Client to Load Schema \e[0m"
+dnf install mysql -y &>>$log_file
+status_check
+
+echo -e "${color} Load Schema \e[0m"
+mysql -h mysql-dev.rdevopsb72.online -uroot -p${MYSQL_ROOT_PASSWORD} < /app/schema/backend.sql &>>$log_file
+status_check
+
+echo -e "${color} Starting Backend Service \e[0m"
+systemctl daemon-reload &>>$log_file
+systemctl enable backend &>>$log_file
+systemctl restart backend &>>$log_file
+status_check
